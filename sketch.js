@@ -1,23 +1,73 @@
-var S1,S2,S3,S4;
-var Sprites = []
+  var coin,coinImg;
+  var path,boy, leftBoundary,rightBoundary;
+  var pathImg,boyImg;
+  var i;
 
-function setup() {
+function preload(){
+  pathImg = loadImage("path.png");
+  boyImg = loadAnimation("Runner-1.png","Runner-2.png");
+  coinImg = loadImage("coin.png")
+}
+
+function setup(){
+  
   createCanvas(400,400);
-S1 = createSprite(75,100,30,30)
-S2 = createSprite(150,250,30,30)
-S3 = createSprite(300,300,30,30)
-S4 = createSprite(350,150,30,30)
-Sprites = [S1,S2,S3,S4]
-for(i=0; i<Sprites.length; i=i+1) {
-console.log(Sprites[i].position.x)
-}
-}
+  
+  // Moving background
+  path=createSprite(200,200);
+  path.addImage(pathImg);
+  path.velocityY = 4;
+  path.scale=1.2;
 
-function draw() 
-{
-  background("blue");
-  drawSprites();
-}
 
+  boy = createSprite(180,340,30,30);
+  boy.scale=0.08;
+  boy.addAnimation("JakeRunning",boyImg);
+  
+
+  leftBoundary=createSprite(0,0,100,800);
+  leftBoundary.visible = false;
+
+
+  rightBoundary=createSprite(410,0,100,800);
+  rightBoundary.visible = false;
+  }
+
+function draw() {
+  background(0);
+//  path.velocityY = 4;
+  
+  boy.x = World.mouseX;
+  
+  edges= createEdgeSprites();
+  boy.collide(edges[3]);
+  boy.collide(leftBoundary);
+  boy.collide(rightBoundary);
+  
+  //code to reset the background
+
+  if(path.y > 400 ){
+    path.y = height/2;
+  }
  
+
+  drawSprites();
+  
+  if(frameCount%100===0) {
+    coin = createSprite(400,400);
+    coin.y = Math.round(random(50,200))
+    coin.x = Math.round(random(50,350))
+    coin.scale = 0.5;
+    coin.velocityY = 4;
+    coin.addImage(coinImg);
+    coin.depth = boy.depth;
+    boy.depth = boy.depth + 1;
+    coin.visible = true;
+  }
+
+
+
+}
+
+
 
